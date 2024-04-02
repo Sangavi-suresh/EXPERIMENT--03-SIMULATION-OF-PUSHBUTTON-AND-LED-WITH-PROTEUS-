@@ -75,33 +75,46 @@ We are now at the last part of step by step guide on how to simulate STM32 proje
 
 ## STM 32 CUBE PROGRAM :
 ```
+
 #include "main.h"
 #include <stdbool.h>
-bool button;
-void blink_led();
 
- while (1)
-  {
-	  blink_led();
-  }
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+void push_button();
+bool button_status;
 
-void blink_led()
+int main(void)
 {
-	button=HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_0);
-			if(button==0)
-			{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-				HAL_Delay(1000);
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-				HAL_Delay(1000);
-			}
-			else
-			{
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-				HAL_Delay(1000);
 
-			}
+  HAL_Init();
+
+  SystemClock_Config();
+
+  MX_GPIO_Init();
+
+  void push_button()
+  {
+  	button_status = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4);
+  	if (button_status == 0)
+  	{
+  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+  		HAL_Delay(500);
+  	}
+  	else
+  	{
+  		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+  		HAL_Delay(500);
+  	}
+  }
+  
+  while (1)
+  {
+	  push_button();
+  }
 }
+
+#endif
 
 ```
 
